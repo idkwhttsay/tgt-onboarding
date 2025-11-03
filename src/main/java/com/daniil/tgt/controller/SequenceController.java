@@ -18,7 +18,11 @@ public class SequenceController {
     }
 
     @GetMapping("/{seqNum}")
-    public ResponseEntity<SequenceDto> getBySeq(@PathVariable long seqNum) {
+    public ResponseEntity<SequenceDto> getBySeq(@PathVariable Long seqNum) {
+        if(seqNum == null || seqNum < 0) {
+            return ResponseEntity.badRequest().build();
+        }
+
         return sequenceService.getBySeqNum(seqNum)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
@@ -26,10 +30,17 @@ public class SequenceController {
 
     @GetMapping("/range")
     public ResponseEntity<List<SequenceDto>> getRangeSeq(
-        @RequestParam(name="from", required = true) Long from,
-        @RequestParam(name="to", required = true) Long to
+        @RequestParam(name="from", required = false) Long from,
+        @RequestParam(name="to", required = false) Long to
     ) {
-        if(from == null || to == null || from < 0 || to <= from) {
+        if(from == null && to == null) {
+            return ResponseEntity.badRequest().build();
+        }
+        
+        if(from == null) from = 0L;
+        if(to == null) to = Long.MAX_VALUE;
+
+        if(from < 0 || to < 0 || from > to) {
             return ResponseEntity.badRequest().build();
         }
 
@@ -42,7 +53,7 @@ public class SequenceController {
     public ResponseEntity<List<SequenceDto>> getLatest(
         @RequestParam(name="limit", required = true) Integer limit
     ) {
-        if(limit == null || limit <= 0) {
+        if(limit == null || limit < 0) {
             return ResponseEntity.badRequest().build();
         }
 
