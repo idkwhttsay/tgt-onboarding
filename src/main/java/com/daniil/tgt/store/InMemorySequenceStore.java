@@ -1,6 +1,7 @@
 package com.daniil.tgt.store;
 
 import com.daniil.tgt.dto.SequenceDto;
+import org.springframework.stereotype.Repository;
 
 import java.util.Collections;
 import java.util.Optional;
@@ -8,6 +9,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ConcurrentHashMap;
 
+@Repository
 public class InMemorySequenceStore {
     // thread-safe in-memory storage
     private final ConcurrentMap<Long, SequenceDto> db = new ConcurrentHashMap<>();

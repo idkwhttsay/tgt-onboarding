@@ -2,6 +2,7 @@ package com.daniil.tgt.service;
 
 import com.daniil.tgt.dto.SequenceDto;
 import com.daniil.tgt.store.InMemorySequenceStore;
+import com.daniil.tgt.websocket.WebSocketPublisher;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -11,10 +12,12 @@ import java.util.concurrent.atomic.AtomicLong;
 public class SequenceService {
     private final AtomicLong seqNumberCounter;
     private final InMemorySequenceStore db;
+    private final WebSocketPublisher publisher;
 
-    SequenceService() {
+    public SequenceService(InMemorySequenceStore db, WebSocketPublisher publisher) {
         this.seqNumberCounter = new AtomicLong(0);
-        this.db = new InMemorySequenceStore();
+        this.db = db;
+        this.publisher = publisher;
     }
 
     public SequenceDto createNext() {
@@ -22,6 +25,9 @@ public class SequenceService {
         String randomStr = generateUniqueRandomStr();
         SequenceDto dto = new SequenceDto(seqNum, randomStr, java.time.Instant.now());
         db.save(dto);
+
+        // publish to websocket topic
+        publisher.publish(dto);
         return dto;
     }
 

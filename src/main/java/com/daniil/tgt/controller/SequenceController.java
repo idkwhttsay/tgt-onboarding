@@ -2,7 +2,6 @@ package com.daniil.tgt.controller;
 
 import com.daniil.tgt.dto.SequenceDto;
 import com.daniil.tgt.service.SequenceService;
-import com.daniil.tgt.store.InMemorySequenceStore;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
