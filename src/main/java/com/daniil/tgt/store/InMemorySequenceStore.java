@@ -13,24 +13,28 @@ import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.ConcurrentSkipListSet;
 
 @Repository
-public class InMemorySequenceStore {
+public class InMemorySequenceStore implements SequenceStore {
     // thread-safe in-memory storage
     private final ConcurrentNavigableMap<Long, SequenceDto> map = new ConcurrentSkipListMap<>();
     private final ConcurrentSkipListSet<String> randomStrings = new ConcurrentSkipListSet<>();
 
+    @Override
     public void save(SequenceDto dto) {
         map.put(dto.getSeqNum(), dto);
         randomStrings.add(dto.getRandomStr());
     }
 
+    @Override
     public Optional<SequenceDto> getBySeqNum(long seqNum) {
         return Optional.ofNullable(map.get(seqNum));
     }
 
+    @Override
     public List<SequenceDto> getRangeSeq(long fromSeq, long toSeq) {
         return new ArrayList<>(map.subMap(fromSeq, toSeq + 1).values());
     }
 
+    @Override
     public List<SequenceDto> getLatestSeq(int limit) {
         List<SequenceDto> ret = new ArrayList<>();
         Iterator<SequenceDto> it = map.descendingMap().values().iterator();
@@ -42,6 +46,7 @@ public class InMemorySequenceStore {
         return ret;
     }
 
+    @Override
     public boolean existsRandomString(String s) {
         return randomStrings.contains(s);
     }

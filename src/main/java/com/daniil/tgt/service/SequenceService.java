@@ -1,7 +1,7 @@
 package com.daniil.tgt.service;
 
 import com.daniil.tgt.dto.SequenceDto;
-import com.daniil.tgt.store.InMemorySequenceStore;
+import com.daniil.tgt.store.SequenceStore;
 import com.daniil.tgt.websocket.WebSocketPublisher;
 import org.springframework.stereotype.Service;
 
@@ -12,10 +12,10 @@ import java.util.concurrent.atomic.AtomicLong;
 @Service
 public class SequenceService {
     private final AtomicLong seqNumberCounter;
-    private final InMemorySequenceStore db;
+    private final SequenceStore db;
     private final WebSocketPublisher publisher;
 
-    public SequenceService(InMemorySequenceStore db, WebSocketPublisher publisher) {
+    public SequenceService(SequenceStore db, WebSocketPublisher publisher) {
         this.seqNumberCounter = new AtomicLong(0);
         this.db = db;
         this.publisher = publisher;
