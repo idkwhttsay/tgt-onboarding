@@ -5,6 +5,7 @@ import com.daniil.tgt.store.InMemorySequenceStore;
 import com.daniil.tgt.websocket.WebSocketPublisher;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -33,6 +34,14 @@ public class SequenceService {
 
     public Optional<SequenceDto> getBySeqNum(long seqNum) {
         return db.getBySeqNum(seqNum);
+    }
+
+    public Optional<List<SequenceDto>> getRangeSeq(long fromSeq, long toSeq) {
+        return Optional.ofNullable(db.getRangeSeq(fromSeq, toSeq));
+    }
+
+    public Optional<List<SequenceDto>> getLatestSeq(int limit) {
+        return Optional.ofNullable(db.getLatestSeq(limit));
     }
 
     private long getNextSeqNumber() {
